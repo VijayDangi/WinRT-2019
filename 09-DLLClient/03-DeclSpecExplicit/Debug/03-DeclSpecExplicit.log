@@ -1,0 +1,3 @@
+﻿  DeclSpecExplicit.cpp
+c:\users\phoenix\documents\visual studio 2017\win32sdk\dllclient\03-declspecexplicit\declspecexplicit.cpp(89): error C2664: 'FARPROC GetProcAddress(HMODULE,LPCSTR)': cannot convert argument 2 from 'const wchar_t [11]' to 'LPCSTR'
+  c:\users\phoenix\documents\visual studio 2017\win32sdk\dllclient\03-declspecexplicit\declspecexplicit.cpp(89): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
