@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\CLSID\{E11D2D3E-BB98-4DC7-8239-154D03F87258}]
+@="MyComClassFactoryDll"
+[HKEY_CLASSES_ROOT\CLSID\{E11D2D3E-BB98-4DC7-8239-154D03F87258}\InprocServer32]
+@="C:\\Windows\\System32\\VIJAY_COM_DLLs\\ContainmentDll\\ContainmentOuterComponent\\ContainmentOuterComponentWithRegFile.dll"
