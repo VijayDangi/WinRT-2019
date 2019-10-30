@@ -18,12 +18,13 @@ The following command will generate 3 X .cpp files, 1 X .h file and 1 X .tlb fil
 
 	> MIDL /env x64 AutomationServerTypeLib.idl
 	
-Genarated files
-	|- AutomationServerTypeLib_i.c
-	|- AutomationServerTypeLib_p.c
-	|- dlldata.c
-	|- AutomationServerTypeLib.h
-	|- AutomationServerTypeLib.tlb
+Genarated fil
+	
+	- AutomationServerTypeLib_i.c
+	- AutomationServerTypeLib_p.c
+	- dlldata.c
+	- AutomationServerTypeLib.h
+	- AutomationServerTypeLib.tlb
 
 	
 								OR
@@ -31,11 +32,12 @@ Genarated files
 	> MIDL /env x64 /h AutomationProxyStubHeader.h  /iid AutomationProxyStubGuids.c  /dlldata AutomationProxyStubDllData.c  /proxy AutomationProxyStub.c AutomationServerTypeLib.idl
 	
 Genarated Files
-	|- AutomationProxyStubGuids.c 
-	|- AutomationProxyStub.c
-	|- AutomationProxyStubDllData.c
-	|- AutomationProxyStubHeader.h
-	|- AutomationServerTypeLib.tlb	
+
+	- AutomationProxyStubGuids.c 
+	- AutomationProxyStub.c
+	- AutomationProxyStubDllData.c
+	- AutomationProxyStubHeader.h
+	- AutomationServerTypeLib.tlb	
 
 
 
@@ -61,9 +63,10 @@ rpcrt4.lib ==> Windows run-time functions
 
 
 After compiling and linking generated files
-	|- AutomationProxyStub.dll
-	|- AutomationProxyStub.exp
-	|- AutomationProxyStub.lib
+
+	- AutomationProxyStub.dll
+	- AutomationProxyStub.exp
+	- AutomationProxyStub.lib
 
 	
 
