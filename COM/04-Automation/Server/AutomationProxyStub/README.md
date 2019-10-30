@@ -27,7 +27,7 @@ Genarated fil
 	- AutomationServerTypeLib.tlb
 
 	
-								OR
+OR
 
 	> MIDL /env x64 /h AutomationProxyStubHeader.h  /iid AutomationProxyStubGuids.c  /dlldata AutomationProxyStubDllData.c  /proxy AutomationProxyStub.c AutomationServerTypeLib.idl
 	
