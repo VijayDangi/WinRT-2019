@@ -1,0 +1,35 @@
+import "unknwn.idl";   //idl file of IUnknown
+//IMyMath Interface
+[
+	object,                                       //represents interface object.
+	uuid(ECC16BC3-CE3E-470F-B728-A26DBB448EAB),  //IID of IMyMath
+	helpstring("IMyMath Interface"),             //useful for documentation level
+	pointer_default(unique),
+	dual,                                        // tells that the server can be used by IClassFacty's and IDispatch's clients.
+	oleautomation
+]
+interface IMyMath : IDispatch
+{
+	import "oaidl.idl";
+	HRESULT SumOfTwoIntegers([in]int, [in]int, [out, retval] int*);
+	HRESULT SubtractionOfTwoIntegers([in]int, [in]int, [out, retval] int*);
+};
+//The Actual TypeLib Related code
+[
+	uuid(E782E3B7-5B66-4BF1-8D5B-438572A7612C),  //LIBID of Type Library
+	version(1.0), //major_version_number.minor_version_number
+	helpstring("MyMathAutomation Component's Type Library")
+]
+library AutomationServerWithRegFileTypeLib
+{
+	importlib("stdole32.tlb");
+	//component code
+	[
+		uuid(3B352E7B-82D4-4395-AE93-80D7E9845DEC), //CLSID of MyMath Component
+		helpstring("MyMathAutomation Component Class")
+	]
+	coclass CMyMath
+	{
+		[default]interface IMyMath;
+	};
+};

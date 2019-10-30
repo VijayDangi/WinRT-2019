@@ -1,0 +1,49 @@
+Windows Registry Editor Version 5.00
+
+;create HKCR\CLSID\{actual clsid}\ key and set to any informative string value
+;CLSID of MyMath
+[HKEY_CLASSES_ROOT\CLSID\{3B352E7B-82D4-4395-AE93-80D7E9845DEC}]
+@="MyCOMAutomationDll_64Bit"
+
+;create HKCR\CLSID\{actual clsid}\InprocServer32 subkey and set to path of server dll
+[HKEY_CLASSES_ROOT\CLSID\{3B352E7B-82D4-4395-AE93-80D7E9845DEC}\InprocServer32]
+@="C:\\Windows\\System32\\VIJAY_COM_DLLs\\Automation\\AutomationServerWithRegFile.dll"
+
+;create HKCR\CLSID\{actual clsid}\TypeLib subkey and set to LIBID of server's Type Library
+[HKEY_CLASSES_ROOT\CLSID\{3B352E7B-82D4-4395-AE93-80D7E9845DEC}\TypeLib]
+;GUID of TypeLib in ( AutomationServerWithRegFile.cpp ===> LIBID_AutomationServer )
+@="{E782E3B7-5B66-4BF1-8D5B-438572A7612C}"
+
+
+;create HKCR\TypeLib\{actual libid} and set to any informative string value
+[HKEY_CLASSES_ROOT\TypeLib\{E782E3B7-5B66-4BF1-8D5B-438572A7612C}]
+@="MyCOMAutomationTypeLib_64bit"
+
+;create HKCR\TypeLib\{actual libid}\<major.minor version number>  subkey and set to any informative string value
+[HKEY_CLASSES_ROOT\TypeLib\{E782E3B7-5B66-4BF1-8D5B-438572A7612C}\1.0]
+@"MyCOMAutomationTypeLib_64bit v1.0"
+
+;create HKCR\TypeLib\{actual libid}\<major.minor version number>\0\win32 subkey and set to path of type library
+[HKEY_CLASSES_ROOT\TypeLib\{E782E3B7-5B66-4BF1-8D5B-438572A7612C}\1.0\0\win32]
+@="C:\\Windows\\System32\\VIJAY_COM_DLLs\\Automation\\AutomationServerTypeLib.tlb"
+
+;create HKCR\Interface\{actual iid} and set to name of interface
+;IID of IMyMath
+;@="Actual_Name_of_interface"
+[HKEY_CLASSES_ROOT\Interface\{ECC16BC3-CE3E-470F-B728-A26DBB448EAB}]
+@="IMyMath"
+
+;create HKCR\Interface\{actual iid}\TypeLib subkey and set to LIBID of server's type library
+[HKEY_CLASSES_ROOT\Interface\{ECC16BC3-CE3E-470F-B728-A26DBB448EAB}\TypeLib]
+@="{E782E3B7-5B66-4BF1-8D5B-438572A7612C}"
+
+;create HKCR\Interface\{actual iid}\ProxyStubClsid32 subkey and set to "hard-coded PSOAInterface IID"
+;@="IID of PSOA ( Proxy Stub OLE Automation ) Interface
+; c++ client uses ProxyStubClsid32
+[HKEY_CLASSES_ROOT\Interface\{ECC16BC3-CE3E-470F-B728-A26DBB448EAB}\ProxyStubClsid32]
+@="{00020424-0000-0000-C000-000000000046}"
+
+;create HKCR\Interface\{actual iid}\ProxyStubClsid subkey and set to "hard-coded" PSOAInterface IID
+; other client (VB, VC#, JS, etc...) uses ProxyStubClsid
+[HKEY_CLASSES_ROOT\Interface\{ECC16BC3-CE3E-470F-B728-A26DBB448EAB}\ProxyStubClsid]
+@="{00020424-0000-0000-C000-000000000046}"

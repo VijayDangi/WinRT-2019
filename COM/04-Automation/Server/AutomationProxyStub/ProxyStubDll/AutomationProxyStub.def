@@ -1,0 +1,7 @@
+LIBRARY AutomationProxyStub.dll
+EXPORTS
+	DllRegisterServer   PRIVATE
+	DllUnregisterServer PRIVATE
+	GetProxyDllInfo     PRIVATE
+	DllGetClassObject   PRIVATE
+	DllCanUnloadNow     PRIVATE
