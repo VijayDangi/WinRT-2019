@@ -27,4 +27,4 @@ OUTPUT FILES
 	
 		- AutomationServerWithRegFile.dll
 
-### Then type make appropriate changes in AutomationServerWithRegFile.reg file and then double click to register.
+### Then type make appropriate changes in `AutomationServerWithRegFile.reg` file and then double click to register.
