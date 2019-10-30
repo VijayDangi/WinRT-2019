@@ -1,7 +1,7 @@
 AutomationServerWithRegFile.dll contains the actual implemantation of `IMyMath` interface methods.
 
 
-##Compiling Step....
+# Compiling Step....
 
 	> cl.exe /EHsc /c AutomationServerWithRegFile.cpp /D UNICODE /DLL /DEF:AutomationServerWithRegFile.def
 
