@@ -1,13 +1,13 @@
 IDL (INTERFACE DEFINITION LANGUAGE)
 
  -------------------------------------------------------------------
-|  [                                                                |
-|   /* Interface attributes go here */ /* Attribute block */        |
-|  ]                                                                |
-|  interface INTERFACE_NAME                                         |
-|  {                                                                |
-|   /* The interface body goes here. */ /* Object Block */          |
-|  }                                                                |
+ [                                                                 
+    /*Interface attributes go here*/ /*Attribute block*/        
+ ]                                                                
+  interface INTERFACE_NAME                                         
+  {                                                                
+   /*The interface body goes here*/ /*Object Block*/          
+  }                                                                
  -------------------------------------------------------------------
  
  
