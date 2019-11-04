@@ -18,6 +18,7 @@ ole32.lib, oleaut32.lib, advapi32.lib are COM DLL's
 
 
 OUTPUT FILES
+
 	- AutomationServerWithRegFile.dll
 	- AutomationServerWithRegFile.exp
 	- AutomationServerWithRegFile.lib
