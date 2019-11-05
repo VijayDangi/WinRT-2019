@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<object id="automation"
+				name="automation"
+				classid="clsid:3B352E7B-82D4-4395-AE93-80D7E9845DEC"></object>
+	</head>
+	<body>
+		<script language="javascript" type="text/javascript">
+			function comMethod_click(val)
+			{
+				if(val === 1)
+				{
+					//console.log(automation);
+					var returnCode = automation.SumOfTwoIntegers(num1.value, num2.value);
+					var msg = "Sum of " + num1.value + " and " + num2.value + " is " + returnCode;
+					alert(msg);
+				}
+				else
+				{
+					var returnCode = automation.SubtractionOfTwoIntegers(num1.value, num2.value);
+					var msg = "Subtraction of " + num1.value + " and " + num2.value + " is " + returnCode;
+					alert(msg);
+				}
+			}
+		</script>
+		
+		<h3>Javascript Automation Client</h3>
+		
+		<table>
+			<tr>
+				<td>
+					<label>Num1</label>
+					<input id="num1" value="0"/>
+					<label>Num1</label>
+					<input id="num2" value="0"/>
+				</td>
+				<td>
+					<button onclick="comMethod_click(1);">Sum</button>
+					<button onclick="comMethod_click(2);">Subtract</button>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
