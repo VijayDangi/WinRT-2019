@@ -18,9 +18,10 @@ ole32.lib, oleaut32.lib, advapi32.lib are COM DLL's
 
 
 OUTPUT FILES
-	|- AutomationServerWithRegFile.dll
-	|- AutomationServerWithRegFile.exp
-	|- AutomationServerWithRegFile.lib
+
+	- AutomationServerWithRegFile.dll
+	- AutomationServerWithRegFile.exp
+	- AutomationServerWithRegFile.lib
 
 	
 ### Now copy and paste following files in "C:/Windows/System32/MyDll/" folder 
