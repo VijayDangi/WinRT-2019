@@ -1,0 +1,4 @@
+#include "SplashScreen.h"
+
+MYICON   ICON   Assets\AstroMediComp.ico
+MYBITMAP BITMAP Assets\AstroMediComp.bmp

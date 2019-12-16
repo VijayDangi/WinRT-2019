@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\CLSID\{75D811F9-91D4-49AF-A32E-BFD58F5B7993}]
+@="AstroMediComp_Project"
+[HKEY_CLASSES_ROOT\CLSID\{75D811F9-91D4-49AF-A32E-BFD58F5B7993}\InprocServer32]
+@="F:\\Server\\AstroMediComp_Project.dll"
