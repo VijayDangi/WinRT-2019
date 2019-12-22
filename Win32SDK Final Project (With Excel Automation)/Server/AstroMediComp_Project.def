@@ -1,0 +1,4 @@
+LIBRARY AstroMediComp_Project.dll
+EXPORTS
+	DllGetClassObject PRIVATE
+	DllCanUnloadNow   PRIVATE

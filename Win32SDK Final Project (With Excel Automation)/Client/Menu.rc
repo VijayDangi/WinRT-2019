@@ -1,0 +1,11 @@
+#include "Menu.h"
+
+SHOWMENU MENU DISCARDABLE
+BEGIN
+	POPUP "&show"
+	BEGIN
+		MENUITEM "&Enter Data"  , ID_DATA_ENTRY
+		MENUITEM "&Show Record" , ID_SHOW_RECORD
+		MENUITEM "&Search"      , ID_SEARCH
+	END
+END
