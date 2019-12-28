@@ -3,28 +3,21 @@
 int AMC_ExportInExcelFileFormate_Automation(HWND hwnd, struct EmployeeDetails *employee, int lengthOfRecord);  //define in ExcelAutomation.cpp
 int AMC_ExportInCSVFileFormate(HWND hwnd, struct EmployeeDetails *employee);  //define in CSVExport.cpp
 
-/******************** SearchRecordWndProc ******************************************/
-LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+/******************** ShowRecordWndProc ******************************************/
+LRESULT CALLBACK ShowRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static HINSTANCE hInstance;
+	
 	static HWND hwndListDepartment;
 	static HWND hwndStaticDepartment;
 	static HWND hwndButtonDepartment;
 	static int  flagDepartment = 0;
 	
-	static HWND hwndRadioFirstName;
-	static HWND hwndRadioLastName;
-	static HWND hwndRadioEmailId;
-	static HWND hwndRadioMobileNo;
-	
-	static HWND hwndEditSearchString;
-	
 	static HWND hwndStaticCountDisplay;
 	
-	static HWND hwndSearchButton;
+	static HWND hwndReadButton;
 	
 	static HWND hListView;
-	
-	static int iSearchByCategory = SEARCH_BY_FIRST_NAME;  //By default
 	
 	static HWND hwndListExport;
 	static HWND hwndStaticExport;
@@ -35,51 +28,20 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 	
 	static int cxChar = LOWORD(GetDialogBaseUnits());
 	static int cyChar = HIWORD(GetDialogBaseUnits());
-
+	
 	RECT rect;
 	LVITEM lvi = {0};
 	static struct EmployeeDetails *employee = NULL;
-	static int    RecordLength; // used while export
-	
+	static int    lengthRecord; // used while export
 	
 		
 	switch(message)
 	{
-		/******************* WM_CTLCOLORSTATIC ******************/			
-		case WM_CTLCOLORSTATIC:
-		{
-			if((HWND) lParam == hwndStaticDepartment || (HWND) lParam == hwndStaticExport)
-			{
-				SetBkColor((HDC)wParam, RGB(255, 255, 255));
-				return((INT_PTR)CreateSolidBrush(RGB(255, 255, 255)));
-			}
-			else
-			{
-				SetTextColor((HDC)wParam, RGB(255, 255, 255));
-				SetBkColor((HDC)wParam, RGB(37, 172, 168));
-				return((INT_PTR)CreateSolidBrush(RGB(37, 172, 168)));
-			}
-		}
 		
 		/******************* WM_CREATE ******************/			
 		case WM_CREATE:							
-		{
-				GetClientRect(hwnd, &rect);
-			
-				CreateWindow(TEXT("static"),
-									TEXT("SEARCH IN"),
-									WS_CHILD | WS_VISIBLE | SS_LEFT,
-									(rect.right/4) - (15 * cxChar),
-									rect.top + 10,
-									10 * cxChar,
-									cyChar * 1.3,
-									hwnd,
-									(HMENU) -1,
-									((LPCREATESTRUCT) lParam) -> hInstance,// OR (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-									NULL
-									);
-										
-						//SendMessage(h, WM_SETTEXT, 0, (LPARAM) TEXT("SEARCH IN"));
+		{		
+					GetClientRect(hwnd, &rect);
 				
 				//DEPARTMENT
 						//static
@@ -149,117 +111,71 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 							
 						flagDepartment = 0;
 				
-				
-				
-	////SEARCH BY
-						CreateWindow(TEXT("static"),
-										TEXT("SEARCH BY"),
-										WS_CHILD | WS_VISIBLE | SS_LEFT,
-										(rect.right/4) - (15 * cxChar),
-										rect.top + 40,
-										13 * cxChar,
-										cyChar * 1.3,
-										hwnd,
-										(HMENU) -1,
-										((LPCREATESTRUCT) lParam) -> hInstance,// OR (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-										NULL
-										);
-				
-						hwndRadioFirstName = CreateWindow(
-								TEXT("button"),
-								TEXT("First Name"),
-								WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
-								(rect.right/4),
-								rect.top + 40,
-								15 * cxChar,
-								cyChar * 1.3,
-								hwnd,
-								(HMENU) ID_EDIT_FIRSTNAME,
-								((LPCREATESTRUCT) lParam)->hInstance,
-								NULL
-							);
-							
-						hwndRadioLastName = CreateWindow(
-								TEXT("button"),
-								TEXT("Last Name"),
-								WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
-								(rect.right/4) + (22 * cxChar),
-								rect.top + 40,
-								15 * cxChar,
-								cyChar * 1.3,
-								hwnd,
-								(HMENU) ID_EDIT_LASTNAME,
-								((LPCREATESTRUCT) lParam)->hInstance,
-								NULL
-							);
-							
-						hwndRadioEmailId = CreateWindow(
-								TEXT("button"),
-								TEXT("Email Id"),
-								WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
-								(rect.right/4) + 2 * (22 * cxChar),
-								rect.top + 40,
-								15 * cxChar,
-								cyChar * 1.3,
-								hwnd,
-								(HMENU) ID_EDIT_EMAIL,
-								((LPCREATESTRUCT) lParam)->hInstance,
-								NULL
-							);
-							
-						hwndRadioMobileNo = CreateWindow(
-								TEXT("button"),
-								TEXT("Mobile NO."),
-								WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
-								(rect.right/4) + 3 * (22 * cxChar),
-								rect.top + 40,
-								15 * cxChar,
-								cyChar * 1.3,
-								hwnd,
-								(HMENU) ID_EDIT_MOBILE,
-								((LPCREATESTRUCT) lParam)->hInstance,
-								NULL
-							);
-							
-							//set checked to FirstName by default
-						SendMessage(hwndRadioFirstName, BM_SETCHECK, (WPARAM) 1, (LPARAM) 0);
-
-	///////Search String
-					CreateWindow(TEXT("static"),
-										TEXT("SEARCH STRING"),
-										WS_CHILD | WS_VISIBLE | SS_LEFT,
-										(rect.right/4) - (15 * cxChar),
-										rect.top + 70,
-										17 * cxChar,
-										cyChar * 1.3,
-										hwnd,
-										(HMENU) -1,
-										((LPCREATESTRUCT) lParam) -> hInstance,// OR (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-										NULL
-										);
-				
-					hwndEditSearchString = CreateWindow(
-												TEXT("edit"),
-												NULL,
-												WS_CHILD | WS_VISIBLE | SS_LEFT | WS_BORDER | ES_AUTOHSCROLL,
-												(rect.right/4) + (8 * cxChar),
-												rect.top + 70,
-												20 * cxChar,
-												cyChar * 1.3,
-												hwnd,
-												(HMENU) ID_SEARCH_EDIT,
-												((LPCREATESTRUCT) lParam)->hInstance,
-												NULL
-										);
-				
-				//**** Search Button
-					//btn
-						hwndSearchButton = CreateWindow( 
+			//EXPORT
+						//static
+						hwndStaticExport = CreateWindow(TEXT("static"),
+											NULL,
+											WS_CHILD | WS_VISIBLE | SS_LEFT | WS_BORDER,
+											(rect.left + 10),
+											rect.bottom - 70,
+											18 * cxChar,
+											cyChar * 1.3,
+											hwnd,
+											(HMENU) ID_STATIC_EXPORT,
+											((LPCREATESTRUCT) lParam) -> hInstance,// OR (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
+											NULL
+									);
+									
+						//btn
+						hwndButtonExport = CreateWindow( 
 						 /* Class  Name     */      TEXT("button"),  //This is predefined name
-						 /* Window text     */      TEXT("SEARCH"),
+						 /* Window text     */      TEXT("V"),
 						 /* Window Style    */      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-						 /* x Position      */      (rect.right/4) + (40 * cxChar),
-						 /* y Position      */      (rect.top + 90),
+						 /* x Position      */      (rect.left + 10) + (18 * cxChar),
+							 /* y Position      */    rect.bottom - 70,
+						 /* Width           */      5 * cxChar,
+						 /* Height          */      cyChar * 1.3,
+						 /* Parent window   */      hwnd,
+						 /* Child window ID */      (HMENU) ID_BUTTON_EXPORT,
+						 /* Instance Handle */      ((LPCREATESTRUCT) lParam)->hInstance,
+						 /* Extra Prameters */      NULL
+							);
+
+						//list
+						hwndListExport = CreateWindow(
+												TEXT("listbox"),
+												TEXT(""),
+												WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_CLIPSIBLINGS,
+												(rect.left + 10),
+												(rect.bottom - 70) + (cyChar * 1.3),
+												18 * cxChar,
+												 5 * cyChar,
+												hwnd,
+												(HMENU) ID_LIST_EXPORT,
+												((LPCREATESTRUCT) lParam) -> hInstance,
+												NULL										
+											);
+						
+								SendMessage(hwndListExport, LB_INSERTSTRING,  0, (LPARAM) " *.csv ");
+								SendMessage(hwndListExport, LB_INSERTSTRING,  1, (LPARAM) " *.xls, *.xlsx ");
+								
+								
+						AMC_SetIndex(hwndListExport, hwndStaticExport, 0);
+							
+						ShowWindow(hwndListExport, SW_HIDE);
+							
+						flagExport = 0;
+						
+					
+				
+				//**** Read Button
+					//btn
+						hwndReadButton = CreateWindow( 
+						 /* Class  Name     */      TEXT("button"),  //This is predefined name
+						 /* Window text     */      TEXT("READ"),
+						 /* Window Style    */      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+						 /* x Position      */      (rect.right/4) + (25 * cxChar),
+							 /* y Position      */    (rect.top + 10),
 						 /* Width           */      13 * cxChar,
 																				cyChar * 1.3,
 						 /* Parent window   */      hwnd,
@@ -268,9 +184,25 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 						 /* Extra Prameters */      NULL
 							);
 							
-							EnableWindow(hwndSearchButton, FALSE);
+							EnableWindow(hwndReadButton, FALSE);
 
-			
+				//**** Export Button
+					//btn
+						hwndExportButton = CreateWindow( 
+						 /* Class  Name     */      TEXT("button"),  //This is predefined name
+						 /* Window text     */      TEXT("EXPORT"),
+						 /* Window Style    */      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+						 /* x Position      */      (rect.left + 10) + (25 * cxChar),
+							 /* y Position      */    rect.bottom - 70,
+						 /* Width           */      13 * cxChar,
+																				cyChar * 1.3,
+						 /* Parent window   */      hwnd,
+						 /* Child window ID */      (HMENU) ID_EXPORT_BUTTON,
+						 /* Instance Handle */      ((LPCREATESTRUCT) lParam)->hInstance,
+						 /* Extra Prameters */      NULL
+							);
+							
+							EnableWindow(hwndExportButton, FALSE);			
 							
 			//count display
 			//static
@@ -278,7 +210,7 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 											NULL,
 											WS_CHILD | WS_VISIBLE | SS_LEFT | WS_BORDER,
 											(rect.right - 10) - (18 * cxChar),
-											rect.top + 115,
+											95,
 											18 * cxChar,
 											cyChar * 1.3,
 											hwnd,
@@ -288,91 +220,20 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 									);
 				
 				
-		
-		
-		//EXPORT
-				//static
-				hwndStaticExport = CreateWindow(TEXT("static"),
-									NULL,
-									WS_CHILD | WS_VISIBLE | SS_LEFT | WS_BORDER,
-									(rect.left + 10),
-									rect.bottom - 60,
-									18 * cxChar,
-									cyChar * 1.3,
-									hwnd,
-									(HMENU) ID_STATIC_EXPORT,
-									((LPCREATESTRUCT) lParam) -> hInstance,// OR (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-									NULL
-							);
-							
-				//btn
-				hwndButtonExport = CreateWindow( 
-				 /* Class  Name     */      TEXT("button"),  //This is predefined name
-				 /* Window text     */      TEXT("V"),
-				 /* Window Style    */      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-				 /* x Position      */      (rect.left + 10) + (18 * cxChar),
-					 /* y Position      */    rect.bottom - 60,
-				 /* Width           */      5 * cxChar,
-				 /* Height          */      cyChar * 1.3,
-				 /* Parent window   */      hwnd,
-				 /* Child window ID */      (HMENU) ID_BUTTON_EXPORT,
-				 /* Instance Handle */      ((LPCREATESTRUCT) lParam)->hInstance,
-				 /* Extra Prameters */      NULL
-					);
-
-				//list
-				hwndListExport = CreateWindow(
-										TEXT("listbox"),
-										TEXT(""),
-										WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_CLIPSIBLINGS,
-										(rect.left + 10),
-										(rect.bottom - 60) + (cyChar * 1.3),
-										18 * cxChar,
-										 5 * cyChar,
-										hwnd,
-										(HMENU) ID_LIST_EXPORT,
-										((LPCREATESTRUCT) lParam) -> hInstance,
-										NULL										
-									);
 				
-						SendMessage(hwndListExport, LB_INSERTSTRING,  0, (LPARAM) " *.csv ");
-						SendMessage(hwndListExport, LB_INSERTSTRING,  1, (LPARAM) " *.xls, *.xlsx ");
-						
-						
-				AMC_SetIndex(hwndListExport, hwndStaticExport, 0);
-					
-				ShowWindow(hwndListExport, SW_HIDE);
-					
-				flagExport = 0;
-		
-		//**** Export Button
-			//btn
-				hwndExportButton = CreateWindow( 
-				 /* Class  Name     */      TEXT("button"),  //This is predefined name
-				 /* Window text     */      TEXT("EXPORT"),
-				 /* Window Style    */      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-				 /* x Position      */      (rect.left + 10) + (25 * cxChar),
-					 /* y Position      */    rect.bottom - 60,
-				 /* Width           */      13 * cxChar,
-																		cyChar * 1.3,
-				 /* Parent window   */      hwnd,
-				 /* Child window ID */      (HMENU) ID_EXPORT_BUTTON,
-				 /* Instance Handle */      ((LPCREATESTRUCT) lParam)->hInstance,
-				 /* Extra Prameters */      NULL
-					);
-					
-					EnableWindow(hwndExportButton, FALSE);			
-		///////////////////////////////////////
+				
+				
 				
 				InitCommonControls();   //INITIALIZE COMMON CONTROL'S  //declare in "commctrl.h"
 				
 				
+				//ListView
 				hListView = CreateWindow(
 								WC_LISTVIEW,
 								"",
 								WS_VISIBLE | WS_BORDER | WS_CHILD | LVS_REPORT | LVS_EX_GRIDLINES,
 								rect.left + 5,
-								rect.top + 140,
+								120,
 								rect.right - 10,
 								rect.bottom - 210,
 								hwnd,
@@ -385,47 +246,63 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 							
 				/***Create Column ***/
 				LVCOLUMN lvc;
-					lvc.mask = LVCF_WIDTH | LVCF_TEXT;
-					lvc.fmt  = LVCFMT_RIGHT;
+					lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_FMT | LVCF_SUBITEM;
+					lvc.fmt  = LVCFMT_LEFT;
 					lvc.cx = ( (rect.right - 10) - (rect.left + 5) ) / 9.8;
 					lvc.pszText = "Employee ID";
 					lvc.iSubItem = 1;
 				ListView_InsertColumn(hListView, 1, &lvc);
 				
 					lvc.pszText = "Department";
+					lvc.iSubItem = 10;
 				ListView_InsertColumn(hListView, 1, &lvc);
 				
 					lvc.pszText = "Date Of Joining";
+					lvc.iSubItem = 9;
 				ListView_InsertColumn(hListView, 1, &lvc);
 				
 					lvc.pszText = "Date Of Birth";
+					lvc.iSubItem = 8;
 				ListView_InsertColumn(hListView, 1, &lvc);
 
 					lvc.pszText = "Address";
+					lvc.iSubItem = 7;
 				ListView_InsertColumn(hListView, 1, &lvc);
 
 					lvc.cx = ( (rect.right - 10) - (rect.left + 5) ) / 15;
 					lvc.pszText = "Gender";
+					lvc.iSubItem = 6;
 				ListView_InsertColumn(hListView, 1, &lvc);
 
 					lvc.cx = ( (rect.right - 10) - (rect.left + 5) ) / 9.8;
 					lvc.pszText = "Mobile No.";
+					lvc.iSubItem = 5;
 				ListView_InsertColumn(hListView, 1, &lvc);
 				
 					lvc.pszText = "Email Id";
+					lvc.iSubItem = 4;
 				ListView_InsertColumn(hListView, 1, &lvc);
 				
 					lvc.pszText = "LastName";
+					lvc.iSubItem = 3;
 				ListView_InsertColumn(hListView, 1, &lvc);
 				
 					lvc.pszText = "FirstName";
+					lvc.iSubItem = 2;
 				//ListView_InsertColumn(hListView, 1, &lvc);
 				SendMessage(hListView, LVM_INSERTCOLUMN, (WPARAM) 1, (LPARAM)  &lvc);
 				
-			
 			return(0);
 		}
-	
+		
+		/******************* WM_CTLCOLORSTATIC ******************/			
+		case WM_CTLCOLORSTATIC:
+		{
+				SetBkColor((HDC)wParam, RGB(255, 255, 255));
+				return((INT_PTR)CreateSolidBrush(RGB(255, 255, 255)));
+			
+		}
+		
 		/******************* WM_COMMAND ******************/			
 		case WM_COMMAND:
 		{
@@ -455,67 +332,17 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 						int index = AMC_SetSelectedText(hwndListDepartment, hwndStaticDepartment);
 						if(index != 0)
 						{
-							EnableWindow(hwndSearchButton, TRUE);
+							EnableWindow(hwndReadButton, TRUE);
 						}
 						else
 						{
-							EnableWindow(hwndSearchButton, FALSE);
+							EnableWindow(hwndReadButton, FALSE);
 						}
 						flagDepartment = 0;
 					}
 				}
 				
-				else if(LOWORD(wParam) == ID_EDIT_FIRSTNAME)
-				{
-					if(SendMessage(hwndRadioFirstName, BM_GETCHECK, (WPARAM)0, (LPARAM)0) == BST_UNCHECKED)
-					{
-						SendMessage(hwndRadioFirstName, BM_SETCHECK, (WPARAM)1, (LPARAM) 0);
-						SendMessage(hwndRadioLastName , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioEmailId  , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioMobileNo , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						
-						iSearchByCategory = SEARCH_BY_FIRST_NAME;
-					}
-				}
-				else if(LOWORD(wParam) == ID_EDIT_LASTNAME)
-				{
-					if(SendMessage(hwndRadioLastName, BM_GETCHECK, (WPARAM)0, (LPARAM)0) == BST_UNCHECKED)
-					{
-						SendMessage(hwndRadioFirstName, BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioLastName , BM_SETCHECK, (WPARAM)1, (LPARAM) 0);
-						SendMessage(hwndRadioEmailId  , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioMobileNo , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						
-						iSearchByCategory = SEARCH_BY_LAST_NAME;
-					}
-				}
-				else if(LOWORD(wParam) == ID_EDIT_EMAIL)
-				{
-					if(SendMessage(hwndRadioEmailId, BM_GETCHECK, (WPARAM)0, (LPARAM)0) == BST_UNCHECKED)
-					{
-						SendMessage(hwndRadioFirstName, BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioLastName , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioEmailId  , BM_SETCHECK, (WPARAM)1, (LPARAM) 0);
-						SendMessage(hwndRadioMobileNo , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						
-						iSearchByCategory = SEARCH_BY_EMAIL_ID;
-					}
-				}
-				else if(LOWORD(wParam) == ID_EDIT_MOBILE)
-				{
-					if(SendMessage(hwndRadioMobileNo, BM_GETCHECK, (WPARAM)0, (LPARAM)0) == BST_UNCHECKED)
-					{
-						SendMessage(hwndRadioFirstName, BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioLastName , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioEmailId  , BM_SETCHECK, (WPARAM)0, (LPARAM) 0);
-						SendMessage(hwndRadioMobileNo , BM_SETCHECK, (WPARAM)1, (LPARAM) 0);
-					
-						iSearchByCategory = SEARCH_BY_MOBILE_NUMBER;
-					}
-				}
-				
-				
-		//Export
+			//Export
 				else if(LOWORD(wParam) == ID_BUTTON_EXPORT  && HIWORD(wParam) == BN_CLICKED)
 				{
 					if(flagExport)
@@ -541,65 +368,49 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 					}
 				}
 				
-				//read button
+				
+			//ID_READ_BUTTON
 				else if(LOWORD(wParam) == ID_READ_BUTTON)
 				{
 					if(HIWORD(wParam) == BN_CLICKED)
 					{
-						//Set number of entries in table
-							TCHAR str[15];
-							wsprintf(str, TEXT("TOTAL : 0"));
-							SendMessage(hwndStaticCountDisplay, WM_SETTEXT, (WPARAM)0, (LPARAM) str);
+						TCHAR str[15];
+						wsprintf(str, TEXT("TOTAL : 0"));
+						SendMessage(hwndStaticCountDisplay, WM_SETTEXT, (WPARAM)0, (LPARAM) str);
 							
-							
-						//disable Search button
-						EnableWindow(hwndSearchButton, FALSE);
+						//disable READ button
+						EnableWindow(hwndReadButton, FALSE);
 						
 						//Empty List View first
 						SendMessage(hListView, LVM_DELETEALLITEMS, 0, 0);
 						
 						char* department = NULL;
-						char* searchString = NULL;
 
 						//Free employee struct list first
 						AMC_FreeEmployeeStructMemory(employee);
 						employee = NULL;
 						
-						//get search string
-						AMC_GetText(hwndEditSearchString, &searchString);
-						
-						int length = 0;
+					  int length = 0;
 						int index = SendMessage(hwndListDepartment, LB_GETCURSEL, 0, 0);
 						if(index == 1)
 						{
-							//CALL TO READ RECORD
-							pIReadRecord->ReadRecord(NULL, iSearchByCategory, searchString, &employee, &length);
+							pIReadRecord->ReadRecord(NULL, SEARCH_NONE, NULL, &employee, &length);
 						}
 						else
 						{
 							AMC_GetText(hwndStaticDepartment, &department);
-							//CALL TO READ RECORD
-							pIReadRecord->ReadRecord(department, iSearchByCategory, searchString, &employee, &length);
-						
-							//free memory
-							free(department);
-							department = NULL;
+							pIReadRecord->ReadRecord(department, SEARCH_NONE, NULL, &employee, &length);
 						}
-						
-						//free memory
-							free(searchString);
-							searchString = NULL;
-						
 						if(length > 0)
 						{
 							//enable export button
 							EnableWindow(hwndExportButton, TRUE);
 							
-							RecordLength = length;
+							lengthRecord = length;
 							
 							int ret;
 							LVITEM lvi = {0};
-							lvi.mask = LVIF_TEXT;
+							lvi.mask = LVIF_TEXT | LVIF_PARAM;
 							lvi.iItem = 0;
 							
 							//Set number of entries in table
@@ -608,40 +419,38 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 							SendMessage(hwndStaticCountDisplay, WM_SETTEXT, (WPARAM)0, (LPARAM) str);
 							
 							SendMessage(hListView, LVM_SETTEXTCOLOR, 0, (LPARAM)RGB(58, 151, 144));
-							struct EmployeeDetails *temp = employee;
+							struct EmployeeDetails* temp = employee;
 							while(length--)
-							{
-								
-							
+							{							
 								lvi.pszText = employee->employeeId;
-								lvi.lParam  = (LPARAM) employee->employeeId;
+								lvi.lParam = (LPARAM)employee->employeeId;  //send as LPARAM to CompareFunc
 								ret = ListView_InsertItem(hListView, &lvi);
 								
-								lvi.lParam  = (LPARAM) employee->firstName;
+								lvi.lParam = (LPARAM)employee->firstName;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 1, employee->firstName);
 								
-								lvi.lParam  = (LPARAM) employee->lastName;
+								lvi.lParam = (LPARAM)employee->lastName;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 2, employee->lastName);
 								
-								lvi.lParam  = (LPARAM) employee->email_id;
+								lvi.lParam = (LPARAM)employee->email_id;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 3, employee->email_id);
 								
-								lvi.lParam  = (LPARAM) employee->mobile_no;
+								lvi.lParam = (LPARAM)employee->mobile_no;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 4, employee->mobile_no);
 								
-								lvi.lParam  = (LPARAM) employee->gender;
+								lvi.lParam = (LPARAM)employee->gender;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 5, employee->gender);
 								
-								lvi.lParam  = (LPARAM) employee->address;
+								lvi.lParam = (LPARAM)employee->address;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 6, employee->address);
 								
-								lvi.lParam  = (LPARAM) employee->dateOfBirth;
+								lvi.lParam = (LPARAM)employee->dateOfBirth;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 7, employee->dateOfBirth);
 								
-								lvi.lParam  = (LPARAM) employee->dateOfJoining;
+								lvi.lParam = (LPARAM)employee->dateOfJoining;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 8, employee->dateOfJoining);
 								
-								lvi.lParam  = (LPARAM) employee->department_name;
+								lvi.lParam = (LPARAM)employee->department_name;  //send as LPARAM to CompareFunc
 								ListView_SetItemText(hListView,ret, 9, employee->department_name);
 								
 								(lvi.iItem)++;
@@ -649,19 +458,20 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 								employee = employee->nextDetails;
 							}
 							employee = temp;
-						}	
+							temp = NULL;
+						}
 						else
 						{
-							RecordLength = 0; // used while export
+							lengthRecord = 0; // used while export
 							//disable export button
 							EnableWindow(hwndExportButton, FALSE);
 						}
 
 						//enable READ button
-						EnableWindow(hwndSearchButton, TRUE);						
+						//EnableWindow(hwndReadButton, TRUE);						
 					}
 				}
-				
+
 				//ID_EXPORT_BUTTON
 				else if(LOWORD(wParam) == ID_EXPORT_BUTTON && HIWORD(wParam) == BN_CLICKED)
 				{
@@ -693,7 +503,7 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 					 {
 						 EnableWindow(hwndExportButton, FALSE);
 						 
-						 int status = AMC_ExportInExcelFileFormate_Automation(hwnd, employee, RecordLength);
+						 int status = AMC_ExportInExcelFileFormate_Automation(hwnd, employee, lengthRecord);
 						 if(status == 0)
 						 {
 							 MessageBox(hwnd, TEXT("Data is exported successfully"), TEXT("INFO"), MB_OK | MB_ICONINFORMATION);
@@ -702,19 +512,20 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 						 {
 							 MessageBox(hwnd, TEXT("Error Occured while exporting..."), TEXT("INFO"), MB_OK | MB_ICONERROR);
 						 }
-						 
+							
 							EnableWindow(hwndExportButton, TRUE);
 					 }
 				}
-
+				
 				return(0);
 		}
-		
+			
 		/******************* WM_NOTIFY ******************/			
 		case WM_NOTIFY:
 		{
 				if(((LPNMHDR) lParam)->code == LVN_COLUMNCLICK)
 				{
+					int CALLBACK ListViewCompareFunc(LPARAM, LPARAM, LPARAM);	
 					
 					#define pnm ((NM_LISTVIEW*) lParam)
 						
@@ -728,14 +539,13 @@ LRESULT CALLBACK SearchRecordWndProc (HWND hwnd, UINT message, WPARAM wParam, LP
 					sortFlag = !sortFlag;
 				}
 			
-			return(0);	
+			return(0);
 		}
 		
 		/******************* WM_DESTROY ******************/			
 		case WM_DESTROY:
 		{
 				AMC_FreeEmployeeStructMemory(employee);
-				MessageBox(hwnd, TEXT("SearchRecordWndProc"), TEXT("FREE"), MB_OK);
 				PostQuitMessage(0);
 				return(0);
 		}
