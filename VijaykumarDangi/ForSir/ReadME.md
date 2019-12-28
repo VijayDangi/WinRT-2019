@@ -2,6 +2,7 @@
 For SERVER:
 
 Server Files are:
+	
 	1) server/AstroMediComp_Project.cpp :-
 				This file contains the DllGetClassObject() and DllCanUnloadNow() functions.
 				This file also contains the CoClass.
@@ -27,7 +28,7 @@ To compile and link server dll
 
 		
 /******************************/
-FOR CLIENT :
+For Client :
 
 Client files are:
 
