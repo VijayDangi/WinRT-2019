@@ -104,11 +104,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			n1 = 75;
 			n2 = 25;
 			
-			hr = pIDispatch->GetIDsOfNames(IID_NULL,              //reserved
-										   &szFunctionName_one,	  //array of function name
-										   1,		              //if array then count of function name
-										   GetUserDefaultLCID(),  //default LCID
-										   &dispid);              //return value ID of address
+			hr = pIDispatch->GetIDsOfNames(    IID_NULL,              //reserved
+							   &szFunctionName_one,	  //array of function name
+							   1,		              //if array then count of function name
+							   GetUserDefaultLCID(),  //default LCID
+							   &dispid);              //return value ID of address
 			if(FAILED(hr))
 			{
 				ComErrorDescriptionString(hwnd, hr);
@@ -140,14 +140,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			
 			//Now Call or Invoke SumOfTwoIntegers() function
 			hr = pIDispatch->Invoke(dispid,
-									IID_NULL,
-									GetUserDefaultLCID(),
-									DISPATCH_METHOD,
-									&param,
-									&vRet,
-									NULL,
-									NULL
-						);
+						IID_NULL,
+						GetUserDefaultLCID(),
+						DISPATCH_METHOD,
+						&param,
+						&vRet,
+						NULL,
+						NULL
+					);
 						
 			if(FAILED(hr))
 			{
@@ -166,11 +166,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			
 		/* SubtractionOfTwoIntegers */
 			hr = pIDispatch->GetIDsOfNames(IID_NULL,
-										   &szFunctionName_two,
-										   1,
-										   GetUserDefaultLCID(),
-										   &dispid
-								);
+						   &szFunctionName_two,
+						   1,
+						   GetUserDefaultLCID(),
+						   &dispid
+				);
 			
 			if(FAILED(hr))
 			{
@@ -187,13 +187,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			
 			//Now Call or Invoke SubtractionOfTwoIntegers() function
 			hr = pIDispatch->Invoke(dispid,
-									IID_NULL,
-									GetUserDefaultLCID(),
-									DISPATCH_METHOD,
-									&param,
-									&vRet,
-									NULL,
-									NULL
+						IID_NULL,
+						GetUserDefaultLCID(),
+						DISPATCH_METHOD,
+						&param,
+						&vRet,
+						NULL,
+						NULL
 						);
 			
 			if(FAILED(hr))
