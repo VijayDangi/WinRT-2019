@@ -1,16 +1,22 @@
 # IDL (INTERFACE DEFINITION LANGUAGE)
+____________________________________________________
+[
 
- -------------------------------------------------------------------
- [                                                                 
-    /**Interface attributes go here**/ /**Attribute block**/        
- ]                                                                
-  interface INTERFACE_NAME                                         
-  {                                                                
-   /**The interface body goes here**/ /**Object Block**/          
-  }                                                                
- -------------------------------------------------------------------
- 
- 
+    /** Interface attributes go here **/
+    
+    /** Attribute block **/
+]
+
+interface INTERFACE_NAME                                         
+
+{
+
+   /** The interface body goes here **/
+   
+   /** Object Block **/
+   
+}
+____________________________________________________
  
 To generate the `CPP` files from `idl` type following command..
 The following command will generate 3 X .cpp files, 1 X .h file and 1 X .tlb file
